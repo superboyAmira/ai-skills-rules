@@ -1,0 +1,15 @@
+# Local machine config (paths, mode)
+config.env
+
+# Logs
+logs/
+
+# macOS
+.DS_Store
+
+# Python caches inside synced skills
+**/__pycache__/
+**/*.pyc
+
+# Node artifacts inside synced skills
+**/node_modules/
