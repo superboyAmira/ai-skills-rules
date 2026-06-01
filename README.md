@@ -1,8 +1,8 @@
 # ai-skills-rules
 
-Personal Cursor skills & rules synced across machines via Git.
+Personal Cursor skills, rules & MCP servers synced across machines via Git.
 
-Source: `~/.cursor/skills` and `~/.cursor/rules`  
+Source: `~/.cursor/skills`, `~/.cursor/rules`, `~/.cursor/mcp.json`  
 Remote: [github.com/superboyAmira/ai-skills-rules](https://github.com/superboyAmira/ai-skills-rules)
 
 ## Quick start
@@ -17,7 +17,7 @@ cp config.env.example config.env   # edit SYNC_MODE
 
 | Mode | What it does |
 |------|--------------|
-| **producer** | Copies `~/.cursor/skills` (+ `rules` if present) into this repo. Commits and **pushes only when files changed**. |
+| **producer** | Copies skills, rules, MCP config into this repo. Commits and **pushes only when files changed**. |
 | **consumer** | `git pull` once. If remote has updates, copies repo → `~/.cursor/`. No pull → no overwrite. |
 
 ### Producer setup (main machine)
@@ -66,9 +66,25 @@ LAUNCHD_HOUR=9 LAUNCHD_MINUTE=30 ./sync.sh install-launchd
 |------|--------|-------|
 | `~/.cursor/skills/` | yes | Personal skills |
 | `~/.cursor/rules/` | yes | Created on first sync if missing |
+| `~/.cursor/mcp.json` | yes | MCP servers (see security below) |
 | `~/.cursor/skills-cursor/` | no | Built-in Cursor skills — enable via `SYNC_SKILLS_CURSOR=1` |
 
 Excluded from rsync: `.DS_Store`, `__pycache__/`, `node_modules/`, `.git/`
+
+## MCP sync & secrets
+
+On **producer**, before commit:
+
+- API keys / tokens in `env` and `headers` → replaced with `YOUR_*_HERE` placeholders
+- Absolute home paths (e.g. filesystem MCP args) → `${HOME}`
+
+On **consumer**, after pull:
+
+- Server list and structure updated from repo
+- **Local secrets preserved** — existing non-placeholder values in `~/.cursor/mcp.json` are not overwritten
+- Local-only MCP servers (not in repo) are kept
+
+Fill in secrets on each machine after first consumer sync.
 
 ## Logs
 
@@ -81,8 +97,12 @@ Excluded from rsync: `.DS_Store`, `__pycache__/`, `node_modules/`, `.git/`
 ```
 ai-skills-rules/
 ├── sync.sh              # main script
+├── scripts/
+│   └── mcp_sync.py      # sanitize + merge MCP config
 ├── config.env           # local config (gitignored)
 ├── config.env.example   # template
-├── skills/              # mirrored from ~/.cursor/skills (after first producer run)
-└── rules/               # mirrored from ~/.cursor/rules
+├── skills/              # mirrored from ~/.cursor/skills
+├── rules/               # mirrored from ~/.cursor/rules
+└── mcp/
+    └── mcp.json         # sanitized MCP config from ~/.cursor/mcp.json
 ```

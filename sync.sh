@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ai-skills-rules sync — producer pushes ~/.cursor skills/rules to git;
+# ai-skills-rules sync — producer pushes ~/.cursor skills/rules/mcp to git;
 # consumer pulls from git into ~/.cursor once a day.
 set -euo pipefail
 
@@ -21,6 +21,9 @@ load_config() {
   : "${SYNC_SKILLS:=1}"
   : "${SYNC_RULES:=1}"
   : "${SYNC_SKILLS_CURSOR:=0}"
+  : "${SYNC_MCP:=1}"
+  : "${MCP_REPO_FILE:=mcp/mcp.json}"
+  : "${MCP_CURSOR_FILE:=mcp.json}"
   : "${RSYNC_DELETE:=1}"
   : "${LOG_FILE:=$REPO_DIR/logs/sync.log}"
 }
@@ -84,6 +87,45 @@ sync_pair() {
   esac
 }
 
+sync_mcp() {
+  local direction="$1"
+  local cursor_file="$CURSOR_HOME/$MCP_CURSOR_FILE"
+  local repo_file="$REPO_DIR/$MCP_REPO_FILE"
+  local py="$SCRIPT_DIR/scripts/mcp_sync.py"
+
+  [[ "$SYNC_MCP" == "1" ]] || return 0
+  [[ -f "$py" ]] || die "Missing MCP helper: $py"
+
+  case "$direction" in
+    to_repo)
+      if [[ ! -f "$cursor_file" ]]; then
+        log "  mcp: skip (no $cursor_file)"
+        return 0
+      fi
+      python3 "$py" sanitize "$cursor_file" "$repo_file"
+      log "  mcp: $cursor_file → $repo_file (secrets redacted, paths → \${HOME})"
+      ;;
+    to_cursor)
+      if [[ ! -f "$repo_file" ]]; then
+        log "  mcp: skip (no $repo_file in repo)"
+        return 0
+      fi
+      mkdir -p "$(dirname "$cursor_file")"
+      if [[ -f "$cursor_file" ]]; then
+        python3 "$py" merge "$repo_file" "$cursor_file" "$cursor_file"
+        log "  mcp: $repo_file → $cursor_file (merged, local secrets kept)"
+      else
+        cp "$repo_file" "$cursor_file"
+        python3 "$py" merge "$repo_file" "$cursor_file" "$cursor_file"
+        log "  mcp: $repo_file → $cursor_file (installed from repo)"
+      fi
+      ;;
+    *)
+      die "Unknown MCP direction: $direction"
+      ;;
+  esac
+}
+
 # ── Git helpers ───────────────────────────────────────────────────────────────
 git_has_changes() {
   [[ -n "$(git -C "$REPO_DIR" status --porcelain)" ]]
@@ -116,6 +158,7 @@ producer_run() {
   [[ "$SYNC_SKILLS" == "1" ]] && sync_pair "skills" "skills" "skills" "to_repo"
   [[ "$SYNC_RULES" == "1" ]] && sync_pair "rules" "rules" "rules" "to_repo"
   [[ "$SYNC_SKILLS_CURSOR" == "1" ]] && sync_pair "skills-cursor" "skills-cursor" "skills-cursor" "to_repo"
+  sync_mcp "to_repo"
 
   if ! git_has_changes; then
     log "No changes — skip commit/push"
@@ -124,7 +167,7 @@ producer_run() {
 
   log "Changes detected — committing …"
   git add -A
-  git commit -m "sync: update skills/rules $(date '+%Y-%m-%d %H:%M:%S')"
+  git commit -m "sync: update skills/rules/mcp $(date '+%Y-%m-%d %H:%M:%S')"
 
   log "Pushing to $GIT_REMOTE/$GIT_BRANCH …"
   git push "$GIT_REMOTE" "$GIT_BRANCH"
@@ -144,6 +187,7 @@ consumer_run() {
   [[ "$SYNC_SKILLS" == "1" ]] && sync_pair "skills" "skills" "skills" "to_cursor"
   [[ "$SYNC_RULES" == "1" ]] && sync_pair "rules" "rules" "rules" "to_cursor"
   [[ "$SYNC_SKILLS_CURSOR" == "1" ]] && sync_pair "skills-cursor" "skills-cursor" "skills-cursor" "to_cursor"
+  sync_mcp "to_cursor"
 
   log "Consumer sync complete"
 }
@@ -233,7 +277,7 @@ show_status() {
   echo "Repo:        $REPO_DIR"
   echo "Cursor home: $CURSOR_HOME"
   echo "Branch:      $GIT_BRANCH"
-  echo "Sync:        skills=$SYNC_SKILLS rules=$SYNC_RULES skills-cursor=$SYNC_SKILLS_CURSOR"
+  echo "Sync:        skills=$SYNC_SKILLS rules=$SYNC_RULES skills-cursor=$SYNC_SKILLS_CURSOR mcp=$SYNC_MCP"
   echo "Log:         $LOG_FILE"
   echo ""
   if [[ -f "$LOG_FILE" ]]; then
