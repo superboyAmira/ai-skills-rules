@@ -22,6 +22,12 @@ Maps to diagram step **9 · Docs & PR** before human review.
 
 ### 1. Docs pass
 
+Also process `docs/agentic/<session>/needs-documenting.md` and brainstorm/planning session docs:
+- promote checklist items into real project docs when in scope
+- update `.cursor/manifest.json` for new docs
+- leave unresolved items listed in the PR body
+
+
 1. Diff vs default branch: what user-facing / operator-facing behavior changed?
 2. Update only what is needed: README, AGENTS.md, CLAUDE.md, `docs/` — no unsolicited markdown sprawl.
 3. If a plan file exists and all tasks/reviews are done: `mkdir -p docs/plans/completed && git mv <plan> docs/plans/completed/` (or move if untracked).
@@ -65,3 +71,7 @@ Return:
 - Force-push
 - Merge the PR
 - Skip tests “to get the PR up” if the branch is red — warn and ask
+
+## Telemetry
+
+Emit a Stage report after docs pass and after PR creation (`stage-report.md`).

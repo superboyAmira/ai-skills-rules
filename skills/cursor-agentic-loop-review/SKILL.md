@@ -14,7 +14,9 @@ disable-model-invocation: true
 Post-implementation multidimensional review. Inspired by cc-thingz + Agent Review slide.
 
 **Models:** reviewers/fixer = `cursor-grok-4.5-high-fast`; external = `gpt-5.3-codex[effort=medium]`.  
-Prefer custom agents `agentic-*` in `~/.cursor/agents/` (models pinned in frontmatter).
+Prefer custom agents `cursor-agentic-loop-*` in `~/.cursor/agents/` (models pinned in frontmatter).
+
+After each review phase, emit a Stage report (`~/.cursor/skills/cursor-agentic-loop/references/stage-report.md`).
 
 ## When invoked
 
@@ -40,11 +42,11 @@ Launch from the **main session** in **one** tool-call batch:
 
 | Agent | Focus |
 |-------|--------|
-| `agentic-quality` | Best practices |
-| `agentic-implementation` | Соответствие плану |
-| `agentic-testing` | Покрытие, краевые случаи |
-| `agentic-documentation` | Комментарии, докстринги |
-| `agentic-simplification` | Избыточность |
+| `cursor-agentic-loop-quality` | Best practices |
+| `cursor-agentic-loop-implementation` | Соответствие плану |
+| `cursor-agentic-loop-testing` | Покрытие, краевые случаи |
+| `cursor-agentic-loop-documentation` | Комментарии, докстринги |
+| `cursor-agentic-loop-simplification` | Избыточность |
 
 If custom agents are unavailable, spawn 5× Task `generalPurpose` with `model: cursor-grok-4.5-high-fast` and prompts from [references/reviewers.md](references/reviewers.md).
 
@@ -52,7 +54,7 @@ If custom agents are unavailable, spawn 5× Task `generalPurpose` with `model: c
 
 1. Collect **full** outputs (do not filter or dismiss).
 2. If **all five** report `NO ISSUES FOUND` / zero issues → phase clean → go to phase 2.
-3. Else spawn `agentic-fixer` (or Task + [references/fixer.md](references/fixer.md)) with **verbatim** findings.
+3. Else spawn `cursor-agentic-loop-fixer` (or Task + [references/fixer.md](references/fixer.md)) with **verbatim** findings.
 4. Show FIXES to the user.
 
 ### Loop: review → fixer → review
@@ -70,14 +72,14 @@ If max iterations hit with remaining issues, report and continue to phase 2 (do 
 Report: `--- Review phase 2: code smells ---`
 
 1. One Task/agent with smells prompt (`model: cursor-grok-4.5-high-fast`).
-2. If findings → `agentic-fixer`.
+2. If findings → `cursor-agentic-loop-fixer`.
 3. Single pass, then continue.
 
 ## Phase 3 — External review (Codex)
 
 Report: `--- Review phase 3: external review (gpt-5.3-codex medium) ---`
 
-Use custom agent `agentic-external-review` (`model: gpt-5.3-codex[effort=medium]`).
+Use custom agent `cursor-agentic-loop-external-review` (`model: gpt-5.3-codex[effort=medium]`).
 
 Adversarial loop (max 5):
 
@@ -92,7 +94,7 @@ Fallback if Codex unavailable: next different-family Agent model (e.g. `gpt-5.6-
 
 Report: `--- Review phase 4: critical/major only ---`
 
-One pass: `agentic-quality` + `agentic-implementation` (critical/major only) → fixer if needed. Model: Grok Fast.
+One pass: `cursor-agentic-loop-quality` + `cursor-agentic-loop-implementation` (critical/major only) → fixer if needed. Model: Grok Fast.
 
 ## Hard rules
 

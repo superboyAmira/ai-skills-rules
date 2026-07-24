@@ -4,6 +4,7 @@
 - What changes and why
 - Problem solved / key benefits
 - How it integrates with the existing system
+- Session docs: `docs/agentic/yyyymmdd-<slug>/` (brainstorm.md, planning.md, needs-documenting.md)
 
 ## Context (from discovery)
 - Files/components involved:
@@ -58,8 +59,13 @@
 - [ ] update README / AGENTS / project docs if needed
 - [ ] move this plan to `docs/plans/completed/` when execution finishes
 
+## Documentation
+- Brainstorm/planning dialogue captured under `docs/agentic/yyyymmdd-<slug>/`
+- Extra docs debt tracked in `needs-documenting.md` (promote in Docs & PR step)
+
 ## Post-Completion
 *Manual / external items — no checkboxes*
 
 - Manual verification scenarios
 - Deploy / config / consuming projects
+- Unresolved items from `needs-documenting.md`

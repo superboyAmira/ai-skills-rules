@@ -91,3 +91,8 @@ When all task checkboxes are done, read and follow `~/.cursor/skills/cursor-agen
 - Never dismiss review findings as "pre-existing" — pass full findings to the fixer
 - Subagents must not ask the user questions; they log `[decision]` / `[deviation]` instead
 - No commits unless user opted in
+
+## Telemetry
+
+After each completed plan task and after the review handoff, emit a Stage report:
+`~/.cursor/skills/cursor-agentic-loop/references/stage-report.md`.
