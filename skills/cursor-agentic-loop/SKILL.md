@@ -57,7 +57,8 @@ You are the **orchestrator**. Read each skill and follow it. After every step, e
 - `review-only` — 5→8
 - `pr-only` — 9→10
 
-Announce step number/name on every advance. Print Stage report before the next step.
+Announce step number/name on every advance. Print Stage report before the next step.  
+After the last completed step, print **Loop cost summary** (wall + tokens + subagent counts) per `references/stage-report.md`. Persist to `docs/agentic/<session>/telemetry.md`.
 
 ## Step −1 — Markup bootstrap
 

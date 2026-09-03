@@ -23,3 +23,26 @@ Rules:
 - If tokens/context are not exposed to the agent, say so explicitly — still fill every other field.
 - Include failed/retried subagents in the report.
 - Keep the block compact; no essay.
+- **wall_time is mandatory:** clock time of the step (ISO local or `Xm Ys`). Include user-gate wait; note idle/abort separately.
+- **tokens:** `in/out/total` from usage metadata. Never invent billed numbers. If missing: `n/a (not exposed)`.
+- Keep a running ledger for steps −1…10 (`started_at`, `ended_at`, `wall`, `subagents`, `tokens`).
+
+## Loop cost summary (after the last completed step, and before Docs & PR / Stop)
+
+Print this table even if some cells are `n/a`. Also write it to `docs/agentic/<session>/telemetry.md`.
+
+```markdown
+### Loop cost summary
+| Step | Name | Wall | Subagents | Tokens in/out/total | Notes |
+|------|------|------|-----------|---------------------|-------|
+| −1 | Markup | … | 0 | n/a | skipped |
+| 0 | Index | … | 0 | n/a | |
+| … | … | … | … | … | |
+| **Σ** | | **…** | **N** | **…** | |
+
+- session_wall: <first stage start → now>
+- idle_excluded: <optional: abort/user-away subtracted>
+- tokens_source: usage metadata | n/a (not exposed)
+```
+
+Do not skip the summary because tokens are missing — still show wall time and subagent counts.
