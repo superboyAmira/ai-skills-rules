@@ -14,7 +14,7 @@
 |-------|------|-------|-----------|
 | **−1** | Markup bootstrap (missing manifest etc.) | `cursor-grok-4.5-high-fast` | Task / Grok parent for this step only |
 | **0–2** | Parent (index, brainstorm, plan-make dialogue) | **Claude Opus 4.8** Max/1M **or** **GPT-5.6 Sol** Max/1M | User picker. Prefer Opus. |
-| **3** | Plan auto-review | `claude-opus-4-8[effort=medium,context=300k]` → fallback `gpt-5.6-sol[effort=medium,context=300k]` | `cursor-agentic-loop-plan-review` |
+| **3** | Plan auto-review | `claude-opus-5[effort=medium,context=300k]` → fallback `gpt-5.6-sol[effort=medium,context=300k]` | `cursor-agentic-loop-plan-review` |
 | **4** | Task implementers + fixer | `cursor-grok-4.5-high-fast` | Task / inherit if parent is Grok |
 | **5–6, 8** | 5 reviewers + smells + critical + fixer | `cursor-grok-4.5-high-fast` | `cursor-agentic-loop-{quality,implementation,testing,documentation,simplification,fixer}` |
 | **7** | External review | `gpt-5.3-codex[effort=medium]` | `cursor-agentic-loop-external-review` |
@@ -24,8 +24,8 @@
 
 ```text
 BOOTSTRAP         = cursor-grok-4.5-high-fast
-PLANNING_PARENT   = claude-opus-4-8          # Max/1M; else gpt-5.6-sol Max/1M
-PLAN_REVIEW_AGENT = claude-opus-4-8[effort=medium,context=300k]
+PLANNING_PARENT   = claude-opus-5          # Max/1M; else gpt-5.6-sol Max/1M
+PLAN_REVIEW_AGENT = claude-opus-5[effort=medium,context=300k]
 FALLBACK_PLAN_REV = gpt-5.6-sol[effort=medium,context=300k]
 EXEC_REVIEW       = cursor-grok-4.5-high-fast
 EXTERNAL_REVIEW   = gpt-5.3-codex[effort=medium]
