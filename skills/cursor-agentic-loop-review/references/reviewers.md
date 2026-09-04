@@ -3,7 +3,7 @@
 Substitute: `DEFAULT_BRANCH`, `PLAN_FILE_PATH` (or "none").
 
 All reviewers are **read-only**. Severity: `CRITICAL` | `MAJOR` | `MINOR` | `NIT`.  
-Model for these fallbacks: `cursor-grok-4.5-high-fast`.
+Model for these fallbacks: `cursor-grok-4.6-xhigh`.
 
 ---
 
@@ -43,6 +43,6 @@ Project conventions (AGENTS.md, CLAUDE.md, .cursor/rules), duplication vs abstra
 
 ---
 
-## external (Codex)
+## external (Gemini 3.8 Flash High)
 
-Independent adversarial review. Tag `CRITICAL`/`MAJOR`/`MINOR`. Clean → `NO ISSUES FOUND`.
+Independent adversarial review (model: `gemini-3.8-flash-high` / `gemini-3.8-flash[effort=high]`). Tag `CRITICAL`/`MAJOR`/`MINOR`. Clean → `NO ISSUES FOUND`.

@@ -15,9 +15,9 @@ Inspired by [cc-thingz planning:exec](https://github.com/umputun/cc-thingz). Ada
 
 ## Model
 
-Agentic-loop **step 4+**. Prefer parent **Grok 4.5 High Fast**.  
-Task implementers / fixer: `model: cursor-grok-4.5-high-fast` (or inherit if parent is already Grok).  
-After tasks, hand off to `cursor-agentic-loop-review` skill (5 parallel Grok reviewers → fixer max 5; external = Codex 5.3 Medium).
+Agentic-loop **step 4+**. Prefer parent **Grok 4.6**.  
+Task implementers / fixer: `model: cursor-grok-4.6-xhigh` (or inherit if parent is already Grok).  
+After tasks, hand off to `cursor-agentic-loop-review` skill (5 parallel Grok reviewers → fixer max 5; external = Gemini 3.8 Flash High).
 
 ## Arguments
 

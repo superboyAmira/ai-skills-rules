@@ -16,16 +16,16 @@ Inspired by [cc-thingz brainstorm](https://github.com/umputun/cc-thingz).
 
 ## Model
 
-Agentic-loop **step 1**. Parent: **Opus 4.8 Max/1M** or **GPT-5.6 Sol Max/1M**.  
-Light/fast parent → stop and ask to switch (`~/.cursor/skills/cursor-agentic-loop/references/model-routing.md`).
+Agentic-loop **step 1**. Parent: **Opus 5 (1M context)** или **GPT-5.6 Sol (1M context)** или **Fable 5.1 Max 1M**.  
+Любая другая модель вне списка → stop и уточнить у пользователя (`~/.cursor/skills/cursor-agentic-loop/references/model-routing.md`).
 
 ### Hard ban: no Grok / fast research subagents
 
 Brainstorm is a **parent-only dialogue**, not a fan-out job.
 
-- **Do NOT** launch Task/Explore on `cursor-grok-4.5-high-fast` to map the codebase.
+- **Do NOT** launch Task/Explore on `cursor-grok-4.6-xhigh` to map the codebase.
 - Gather context with Read/Glob/Grep/Shell in this parent session.
-- If parallel research is unavoidable, only Opus/Sol Tasks; synthesize in parent.
+- If parallel research is unavoidable, only Opus/Sol/Fable Tasks; synthesize in parent.
 - Never treat subagent maps as the brainstorm outcome.
 
 ## Documentation (mandatory)
@@ -48,7 +48,7 @@ Before leaving this skill:
 ### Phase 1: Understand
 
 1. Gather context: files, docs, `git log --oneline -10`.
-2. Prefer `.cursor/manifest.json`, `AGENTS.md`, `CLAUDE.md`, `README.md`.
+2. Prefer `.llm/manifest.json`, `AGENTS.md`, `CLAUDE.md`, `README.md`.
 3. Ask questions **one at a time** (multiple choice preferred).
 4. Focus: purpose, constraints, success criteria, integration points.
 5. Append each Q&A to `brainstorm.md` as you go (or flush at end — but do not skip).

@@ -2,8 +2,8 @@
 name: cursor-agentic-loop-plan-make
 description: >-
   Create a structured implementation plan in docs/plans/yyyymmdd-<task>.md,
-  persist planning dialogue under docs/agentic/, then plan-review with Opus 4.8
-  medium / GPT-5.6 300k medium. Use when the user says
+  persist planning dialogue under docs/agentic/, then plan-review with Opus 5
+  medium / GPT-5.6 300k medium / Fable 5.1 300k medium. Use when the user says
   cursor-agentic-loop-plan-make, plan-make, /cursor-agentic-loop-plan-make,
   write a plan, or after brainstorm Write plan.
 disable-model-invocation: true
@@ -16,9 +16,9 @@ Inspired by [cc-thingz planning:make](https://github.com/umputun/cc-thingz).
 
 ## Model
 
-Steps **0–2** parent: **Opus 4.8 Max/1M** or **GPT-5.6 Sol Max/1M**.  
+Steps **0–2** parent: **Opus 5 (1M context)** или **GPT-5.6 Sol (1M context)** или **Fable 5.1 Max 1M**.  
 **Auto review (step 3):** custom agent `cursor-agentic-loop-plan-review` →  
-`claude-opus-4-8[effort=medium,context=300k]` (fallback `gpt-5.6-sol[effort=medium,context=300k]`).
+`claude-opus-5[effort=medium,context=300k]` (fallback `gpt-5.6-sol[effort=medium,context=300k]` → fallback `claude-fable-5.1[effort=medium,context=300k]`).
 
 ## Documentation (mandatory)
 
@@ -69,7 +69,7 @@ Hard requirements: numbered tasks, Files blocks, tests as separate checkboxes, a
 
 | Option | Action |
 |--------|--------|
-| Auto review | Task → `cursor-agentic-loop-plan-review` (`claude-opus-4-8[effort=medium,context=300k]`; fallback Sol medium 300k). On NEEDS REVISION, fix plan + docs, re-ask |
+| Auto review | Task → `cursor-agentic-loop-plan-review` (`claude-opus-5[effort=medium,context=300k]`; fallback Sol medium 300k -> Fable 5.1 medium 300k). On NEEDS REVISION, fix plan + docs, re-ask |
 | Revise with me | Interactive revision |
 | Implement | → `cursor-agentic-loop-plan-exec` |
 | Done | Stop |

@@ -24,7 +24,7 @@ Maps to diagram step **9 · Docs & PR** before human review.
 
 Also process `docs/agentic/<session>/needs-documenting.md` and brainstorm/planning session docs:
 - promote checklist items into real project docs when in scope
-- update `.cursor/manifest.json` for new docs
+- update `.llm/manifest.json` for new docs
 - leave unresolved items listed in the PR body
 
 

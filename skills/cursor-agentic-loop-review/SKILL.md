@@ -3,7 +3,7 @@ name: cursor-agentic-loop-review
 description: >-
   Multi-phase post-implementation review: 5 parallel agents (Quality,
   Implementation, Testing, Documentation, Simplification) → Fixer loop (max 5),
-  then smells, external Codex 5.3 Medium, critical-only. Use when the user says
+  then smells, external Gemini 3.8 Flash High, critical-only. Use when the user says
   cursor-agentic-loop-review, review, agentic review, code smells, external review, critical review, or when
   cursor-agentic-loop-plan-exec / cursor-agentic-loop reaches review phases.
 disable-model-invocation: true
@@ -13,7 +13,7 @@ disable-model-invocation: true
 
 Post-implementation multidimensional review. Inspired by cc-thingz + Agent Review slide.
 
-**Models:** reviewers/fixer = `cursor-grok-4.5-high-fast`; external = `gpt-5.3-codex[effort=medium]`.  
+**Models:** reviewers/fixer = `cursor-grok-4.6-xhigh`; external = `gemini-3.8-flash-high` (или `gemini-3.8-flash[effort=high]`).  
 Prefer custom agents `cursor-agentic-loop-*` in `~/.cursor/agents/` (models pinned in frontmatter).
 
 After each review phase, emit a Stage report (`~/.cursor/skills/cursor-agentic-loop/references/stage-report.md`).
@@ -48,7 +48,7 @@ Launch from the **main session** in **one** tool-call batch:
 | `cursor-agentic-loop-documentation` | Комментарии, докстринги |
 | `cursor-agentic-loop-simplification` | Избыточность |
 
-If custom agents are unavailable, spawn 5× Task `generalPurpose` with `model: cursor-grok-4.5-high-fast` and prompts from [references/reviewers.md](references/reviewers.md).
+If custom agents are unavailable, spawn 5× Task `generalPurpose` with `model: cursor-grok-4.6-xhigh` and prompts from [references/reviewers.md](references/reviewers.md).
 
 ### Then Fixer
 
@@ -71,15 +71,15 @@ If max iterations hit with remaining issues, report and continue to phase 2 (do 
 
 Report: `--- Review phase 2: code smells ---`
 
-1. One Task/agent with smells prompt (`model: cursor-grok-4.5-high-fast`).
+1. One Task/agent with smells prompt (`model: cursor-grok-4.6-xhigh`).
 2. If findings → `cursor-agentic-loop-fixer`.
 3. Single pass, then continue.
 
-## Phase 3 — External review (Codex)
+## Phase 3 — External review (Gemini)
 
-Report: `--- Review phase 3: external review (gpt-5.3-codex medium) ---`
+Report: `--- Review phase 3: external review (gemini-3.8-flash-high) ---`
 
-Use custom agent `cursor-agentic-loop-external-review` (`model: gpt-5.3-codex[effort=medium]`).
+Use custom agent `cursor-agentic-loop-external-review` (`model: gemini-3.8-flash-high`).
 
 Adversarial loop (max 5):
 
@@ -88,13 +88,13 @@ Adversarial loop (max 5):
 3. Else → fixer → if no remaining CRITICAL/MAJOR after fixes, stop (minors fixed once).
 4. If blocking remain → loop.
 
-Fallback if Codex unavailable: next different-family Agent model (e.g. `gpt-5.6-sol` or `gemini-3.1-pro`); announce fallback.
+Fallback if Gemini unavailable: next different-family Agent model (e.g. `gpt-5.6-sol` or `claude-sonnet-5`); announce fallback.
 
 ## Phase 4 — Critical only
 
 Report: `--- Review phase 4: critical/major only ---`
 
-One pass: `cursor-agentic-loop-quality` + `cursor-agentic-loop-implementation` (critical/major only) → fixer if needed. Model: Grok Fast.
+One pass: `cursor-agentic-loop-quality` + `cursor-agentic-loop-implementation` (critical/major only) → fixer if needed. Model: Grok 4.6.
 
 ## Hard rules
 

@@ -59,11 +59,18 @@ Things that still need docs beyond this session — update as you learn:
 ```markdown
 # Needs documenting
 - [ ] <topic> — why / for whom / suggested path (e.g. docs/business-processes/…)
-- [ ] Update `.cursor/manifest.json` entries for new docs
+- [ ] Update `.llm/manifest.json` entries for new docs
 - [ ] README / runbook / API / metrics / runbooks / ADR if architecture changed
 ```
 
 Promote items into real docs during step 9 (`cursor-agentic-loop-docs-pr`) or earlier if blocking.
+
+## Business / operator docs vs session scratch
+
+- Session folder (`docs/agentic/…`) = dialogue ledger for the loop; may be gitignored.
+- Product business/runbook docs (e.g. `docs/business/<feature>.md`) = durable operator docs; **must be git-trackable**.
+- If a business doc is created under an ignored path: un-ignore it (see `step-minus-one.md` manifest rules), add it to `.llm/manifest.json`, and link it from the session README / plan.
+- Never put ignored paths into `.llm/manifest.json`.
 
 ## Rules
 
@@ -71,3 +78,4 @@ Promote items into real docs during step 9 (`cursor-agentic-loop-docs-pr`) or ea
 - Prefer updating existing session files over creating duplicates.
 - Link session folder from the plan Overview.
 - Russian or English — match the project's docs language (employee-stat → Russian OK).
+- After every step, print a Stage report (`stage-report.md`) and append to `telemetry.md`.
